@@ -5,7 +5,7 @@ import Test.Framework.Providers.HUnit (testCase)
 import Control.Monad.IO.Class
 import Data.SBV
 
-import Test.QuickCheck
+import Test.QuickCheck hiding ((==>))
 import Test.HUnit.Lang
 
 main :: IO ()
@@ -27,7 +27,7 @@ prop2 i = i /= 42
 
 assert3 :: Assertion
 assert3 = do
-  result <- prove $ \x y -> x*y .== (y*x::SInteger)
+  result <- prove $ \x y z -> x^3+y^3 .== z^3 &&& x^2+y^2+z^2 .< 200 ==> x*y*z.==(0::SInteger)
   if (not $ modelExists result)
     then return()
     else assertFailure $ show result
