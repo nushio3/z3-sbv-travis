@@ -13,8 +13,8 @@ tests = [
            ]
       ]
 
-prop1 b = b == False
+prop1 b = b || True
   where types = (b :: Bool)
 
-prop2 i = i == 42
+prop2 i = i /= 42
   where types = (i :: Int)
