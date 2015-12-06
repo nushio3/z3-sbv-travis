@@ -33,6 +33,8 @@ test-suite z3-sbv-travis-test
   main-is:             Spec.hs
   build-depends:       base
                      , z3-sbv-travis
+                     , sbv
+                     , transformers
                      , test-framework
                      , test-framework-quickcheck2
                      , QuickCheck
