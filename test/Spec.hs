@@ -1,11 +1,12 @@
 import Test.Framework (defaultMain, testGroup)
 import Test.Framework.Providers.QuickCheck2 (testProperty)
+import Test.Framework.Providers.HUnit (testCase)
 
 import Control.Monad.IO.Class
 import Data.SBV
 
 import Test.QuickCheck
-import Test.QuickCheck.Monadic
+import Test.HUnit.Lang
 
 main :: IO ()
 main = defaultMain tests
@@ -14,7 +15,7 @@ tests = [
         testGroup "Sorting Group 1" [
                 testProperty "logic is correct" prop1,
                 testProperty "the answer is not reachable by QuickCheck" prop2,
-                testProperty "Z3 can find the answer" prop3
+                testCase "Z3 can find the answer" assert3
            ]
       ]
 
@@ -24,8 +25,9 @@ prop1 b = b || True
 prop2 i = i /= 42
   where types = (i :: Int)
 
-prop3 :: Property
-prop3 = monadicIO $ do
-  result <- liftIO $ prove $ \x y -> x*y .== (y*x::SInteger)
-  -- in case of proof, assert non-existence of counterexample
-  assert $ not $ modelExists result
+assert3 :: Assertion
+assert3 = do
+  result <- prove $ \x y -> x*y .== (y*x::SInteger)
+  if (not $ modelExists result)
+    then return()
+    else assertFailure $ show result
